@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Happy 21st Birthday Coleen! A special birthday gift website.">
+  <title>Happy 21st Birthday Arianne Coleen! 🎂</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎂</text></svg>">
+</head>
+
+<body>
+
+  <!-- ==========================================
+       SECTION 1 — CANDLE BLOW SCREEN
+       ========================================== -->
+  <div id="candle-screen">
+    <div class="cake-container">
+
+      <!-- Candle & Flame -->
+      <div class="candle-wrapper">
+        <div class="flame-container">
+          <div class="flame"></div>
+          <div class="flame-glow"></div>
+          <div class="smoke-container">
+            <div class="smoke"></div>
+            <div class="smoke"></div>
+            <div class="smoke"></div>
+          </div>
+        </div>
+        <div class="candle"></div>
+      </div>
+
+      <!-- Cake Layers (top → bottom) -->
+      <div class="cake-layer top">
+        <div class="cake-dots">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+      <div class="cake-layer middle">
+        <div class="cake-dots">
+          <span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+      <div class="cake-layer bottom">
+        <div class="cake-dots">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+      <div class="cake-plate"></div>
+    </div>
+
+    <!-- Prompt -->
+    <div class="blow-prompt">
+      <h2>Make a wish and blow the candle 🎂</h2>
+      <p>Blow into your microphone or tap the button below</p>
+      <button id="blow-btn">Blow 🌬️</button>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       SECTION 2 — GREETING SCREEN
+       ========================================== -->
+  <div id="greeting-screen">
+    <canvas id="confetti-canvas"></canvas>
+    <div class="greeting-content">
+      <div class="greeting-emoji">🎉</div>
+      <h2 class="greeting-text">Happy 21st Birthday<br>to you, Coleen!</h2>
+      <p class="greeting-subtext">Wishing you all the best on your special day ✨</p>
+      <button id="enter-btn">Enter ✨</button>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       MAIN CONTENT  (hidden until "Enter" is clicked)
+       ========================================== -->
+  <div id="main-content">
+
+    <!-- ---- Hero Section ---- -->
+    <section id="hero-section">
+      <canvas id="particles-canvas"></canvas>
+      <div class="hero-container">
+        <div class="hero-image-wrapper reveal">
+          <img src="assets/mainPic.jpg" alt="Coleen" class="hero-image" id="hero-photo">
+        </div>
+        <div class="hero-text reveal">
+          <div class="label">🎉 May 29, 2026</div>
+          <h1>Happy 21st Birthday, <span id="dynamic-name">Coleen</span>!</h1>
+          <p>
+            Here's to celebrating another year of you — your smile, your energy,
+            and everything that makes you uniquely amazing. This one's for you. 🥂
+          </p>
+        </div>
+      </div>
+      <div class="scroll-indicator">
+        <span>Scroll</span>
+        <div class="scroll-arrow"></div>
+      </div>
+    </section>
+
+    <!-- ---- Photo Gallery Section ---- -->
+    <section id="gallery-section">
+      <div class="section-header reveal">
+        <h2>Moments with Coleen 📷</h2>
+        <p>A collection of memories worth celebrating</p>
+      </div>
+      <div class="gallery-grid">
+        <div class="gallery-item reveal">
+          <img src="assets/IMG_2911150799216846.png" alt="Memory 1" loading="lazy">
+          <div class="overlay"><span>Memory #1</span></div>
+        </div>
+        <div class="gallery-item reveal">
+          <img src="assets/IMG_20260508_140351.png" alt="Memory 2" loading="lazy">
+          <div class="overlay"><span>Memory #2</span></div>
+        </div>
+        <div class="gallery-item reveal">
+          <img src="assets/IMG_20260515_212120.png" alt="Memory 3" loading="lazy">
+          <div class="overlay"><span>Memory #3</span></div>
+        </div>
+        <div class="gallery-item reveal">
+          <img src="assets/IMG_20260516_214443.png" alt="Memory 4" loading="lazy">
+          <div class="overlay"><span>Memory #4</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---- Roblox Moments Section ---- -->
+    <section id="roblox-section">
+      <div class="section-header reveal">
+        <h2>🎮 Roblox Moments</h2>
+        <p>Gaming memories we'll never forget</p>
+      </div>
+
+      <div class="roblox-carousel-wrapper">
+        <button class="roblox-nav roblox-prev" id="roblox-prev" aria-label="Previous">&#8249;</button>
+        <div class="roblox-track-container">
+          <div class="roblox-track" id="roblox-track">
+            <div class="roblox-slide"><img src="assets/robloxMoments/7952712234_106388867582829_1779111526422.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/7952712234_106388867582829_1779111529311.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/7952712234_106388867582829_1779112705008.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/7952712234_106388867582829_1779113156334.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/7952712234_106388867582829_1779113162606.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/7952712234_106388867582829_1779113177370.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/7952712234_106388867582829_1779113180593.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/7952712234_106388867582829_1779113263318.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/7952712234_106388867582829_1779113324117.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/7952712234_106388867582829_1779113341669.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/7952712234_106388867582829_1779113358674.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/7952712234_106388867582829_1779113766954.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/7952712234_126509999114328_1778509312118.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/7952712234_126509999114328_1778593513571.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/7952712234_126509999114328_1778593516958.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/7952712234_18334179599_1778765630707.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/7952712234_18334179599_1778765637675.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/7952712234_18334179599_1778766819375.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/7952712234_18334179599_1778766823567.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/7952712234_18334179599_1778766827102.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/7952712234_18334179599_1778766830654.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/7952712234_18334179599_1778766833609.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/RobloxScreenShot20260509_214646374.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/RobloxScreenShot20260509_224240633.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/RobloxScreenShot20260509_224339147.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/RobloxScreenShot20260509_224558020.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/RobloxScreenShot20260509_224750043.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/RobloxScreenShot20260509_224819341.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/RobloxScreenShot20260509_224959037.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/RobloxScreenShot20260509_225037086.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/RobloxScreenShot20260509_225849083.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/RobloxScreenShot20260509_230113144.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/RobloxScreenShot20260510_134421940.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/RobloxScreenShot20260510_134441903.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/RobloxScreenShot20260510_134443304.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/RobloxScreenShot20260511_120749277.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/RobloxScreenShot20260511_215025963.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/RobloxScreenShot20260511_221150393.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/RobloxScreenShot20260511_221748544.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/RobloxScreenShot20260512_115439099.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/RobloxScreenShot20260512_115439947.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+            <div class="roblox-slide"><img src="assets/robloxMoments/RobloxScreenShot20260512_123043620.png"
+                alt="Roblox Moment" loading="lazy">
+              <div class="roblox-overlay"></div>
+            </div>
+          </div>
+        </div>
+        <button class="roblox-nav roblox-next" id="roblox-next" aria-label="Next">&#8250;</button>
+      </div>
+
+      <!-- Dot indicators -->
+      <div class="roblox-dots" id="roblox-dots"></div>
+
+      <!-- Counter -->
+      <p class="roblox-counter" id="roblox-counter">1 / 42</p>
+    </section>
+
+    <!-- ---- Personal Message Section ---- -->
+    <section id="message-section">
+      <div class="message-card reveal">
+        <h3>Dear Coleen,</h3>
+        <p>
+          Happy 21st Birthday! Today marks a beautiful milestone in your life,
+          and I just wanted to take a moment to tell you how truly special you are.
+        </p>
+        <p>
+          From all the laughter we've shared to the unforgettable memories we've
+          created together, every moment with you has been a gift. You light up
+          every room you walk into, and the world is so much brighter because
+          you're in it.
+        </p>
+        <p>
+          As you step into this exciting new chapter, I hope it brings you
+          everything your heart desires — endless happiness, incredible
+          adventures, and all the love you deserve.
+        </p>
+        <p>
+          Here's to you, to us, and to many more years of amazing memories
+          ahead. Cheers to 21! 🥂
+        </p>
+        <div class="signature">
+          With love,<br>
+          [Your Name] ❤️
+        </div>
+      </div>
+    </section>
+
+    <!-- ---- Footer ---- -->
+    <footer id="footer">
+      <p>Made by <i>JisunTitumSaMaiklingPagpapahinga</i> HAHAHAHA</p>
+    </footer>
+  </div>
+
+  <!-- ---- Lightbox Overlay ---- -->
+  <div id="lightbox">
+    <button id="lightbox-close" aria-label="Close lightbox">✕</button>
+    <img id="lightbox-img" src="" alt="Gallery Image">
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
