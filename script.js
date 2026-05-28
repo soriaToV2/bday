@@ -6,209 +6,69 @@
 document.addEventListener('DOMContentLoaded', () => {
 
   // ---- DOM References ----
-  const candleScreen   = document.getElementById('candle-screen');
-  const greetingScreen = document.getElementById('greeting-screen');
   const mainContent    = document.getElementById('main-content');
-  const blowBtn        = document.getElementById('blow-btn');
-  const enterBtn       = document.getElementById('enter-btn');
-  const flameContainer = document.querySelector('.flame-container');
-  const smokeContainer = document.querySelector('.smoke-container');
-  const greetingContent = document.querySelector('.greeting-content');
-  const confettiCanvas = document.getElementById('confetti-canvas');
   const lightbox       = document.getElementById('lightbox');
   const lightboxImg    = document.getElementById('lightbox-img');
   const lightboxClose  = document.getElementById('lightbox-close');
 
-  let hasBlown = false;
+  // ==========================================
+  // THEME SELECTOR
+  // ==========================================
 
-  // Prevent scrolling during intro
+  const themeScreen   = document.getElementById('theme-screen');
+  const confirmBtn    = document.getElementById('theme-confirm-btn');
+  const themeCards    = document.querySelectorAll('.theme-card');
+  const themeBg       = document.querySelector('.theme-screen-bg');
+
+  let selectedTheme = 'skyblue';
+
+  // Apply initial default theme
+  document.documentElement.setAttribute('data-theme', 'skyblue');
+  // Prevent scrolling while on theme screen
   document.body.style.overflow = 'hidden';
 
-  // ==========================================
-  // MICROPHONE BLOW DETECTION
-  // ==========================================
+  themeCards.forEach(card => {
+    card.addEventListener('click', () => {
+      // Remove active from all
+      themeCards.forEach(c => c.classList.remove('active'));
+      // Set active on clicked
+      card.classList.add('active');
+      selectedTheme = card.dataset.theme;
 
-  function initMicDetection() {
-    // Check if getUserMedia is supported
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      console.log('getUserMedia not supported — using button fallback');
-      return;
-    }
+      // Apply theme — this updates all CSS variables on <html>,
+      // so the theme screen background, title, subtitle, and button
+      // all repaint immediately via their var() references.
+      document.documentElement.setAttribute('data-theme', selectedTheme);
 
-    navigator.mediaDevices.getUserMedia({ audio: true })
-      .then(stream => {
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        const audioContext = new AudioCtx();
-        const source   = audioContext.createMediaStreamSource(stream);
-        const analyser = audioContext.createAnalyser();
-        source.connect(analyser);
-        analyser.fftSize = 256;
+      // Force repaint on the background element so gradient updates in all browsers
+      themeBg.style.animation = 'none';
+      themeBg.offsetHeight; // trigger reflow
+      themeBg.style.animation = '';
+    });
+  });
 
-        const dataArray  = new Uint8Array(analyser.frequencyBinCount);
-        let blowCount    = 0;
-        const threshold  = 50;   // volume sensitivity
-        const required   = 20;   // frames (~0.33 s at 60 fps)
+  confirmBtn.addEventListener('click', () => {
+    // Ensure theme is applied
+    document.documentElement.setAttribute('data-theme', selectedTheme);
 
-        function checkVolume() {
-          if (hasBlown) return;
+    // Hide theme screen
+    themeScreen.classList.add('hidden');
 
-          analyser.getByteFrequencyData(dataArray);
-          const avg = dataArray.reduce((s, v) => s + v, 0) / dataArray.length;
+    // Show Meme Videos Screen
+    initMemeVideos();
+  });
 
-          if (avg > threshold) {
-            blowCount++;
-            // Real-time visual feedback — flame reacts to blowing
-            const progress = Math.min(blowCount / required, 1);
-            flameContainer.style.opacity   = 1 - progress * 0.7;
-            flameContainer.style.transform = `scale(${1 - progress * 0.6})`;
-
-            if (blowCount >= required) {
-              triggerBlowOut();
-              stream.getTracks().forEach(t => t.stop());
-              return;
-            }
-          } else {
-            blowCount = Math.max(0, blowCount - 2);
-            flameContainer.style.opacity   = 1;
-            flameContainer.style.transform = 'scale(1)';
-          }
-
-          requestAnimationFrame(checkVolume);
-        }
-
-        checkVolume();
-      })
-      .catch(() => {
-        console.log('Microphone access denied — using button fallback');
-      });
-  }
-
-  initMicDetection();
-
-  // ==========================================
-  // BLOW-OUT TRIGGER
-  // ==========================================
-
-  function triggerBlowOut() {
-    if (hasBlown) return;
-    hasBlown = true;
-
-    // 1. Extinguish flame
-    flameContainer.classList.add('blown-out');
-
-    // 2. Show smoke wisps
-    setTimeout(() => {
-      smokeContainer.classList.add('active');
-    }, 200);
-
-    // 3. Transition to greeting screen
-    setTimeout(() => {
-      candleScreen.classList.add('hidden');
-      greetingScreen.classList.add('visible');
-      startConfetti();
-
-      // Reveal greeting text after confetti starts
-      setTimeout(() => {
-        greetingContent.classList.add('visible');
-      }, 800);
-    }, 1500);
-  }
-
-  // Fallback button
-  blowBtn.addEventListener('click', triggerBlowOut);
-
-  // ==========================================
-  // CONFETTI SYSTEM  (subtle – 60 particles)
-  // ==========================================
-
-  function startConfetti() {
-    const ctx = confettiCanvas.getContext('2d');
-    confettiCanvas.width  = window.innerWidth;
-    confettiCanvas.height = window.innerHeight;
-
-    const colors = [
-      '#87CEEB', '#B0E0F6', '#5BADE0', '#4A90D9',
-      '#FFD700', '#FFFFFF', '#ff6b8a', '#2C6FB5'
-    ];
-
-    const particles = [];
-    const count     = 60;      // keep it subtle
-    const maxFrames = 180;     // ~3 seconds at 60 fps
-
-    for (let i = 0; i < count; i++) {
-      particles.push({
-        x: Math.random() * confettiCanvas.width,
-        y: -20 - Math.random() * 200,
-        size: Math.random() * 8 + 3,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        speedX: (Math.random() - 0.5) * 3,
-        speedY: Math.random() * 2 + 1.5,
-        rotation: Math.random() * 360,
-        rotSpeed: (Math.random() - 0.5) * 6,
-        opacity: 1,
-        shape: Math.random() > 0.5 ? 'rect' : 'circle'
-      });
-    }
-
-    let frame = 0;
-
-    function animate() {
-      ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-      frame++;
-
-      const fadeStart = maxFrames * 0.7;
-
-      particles.forEach(p => {
-        p.x += p.speedX;
-        p.y += p.speedY;
-        p.speedY += 0.03;          // gravity
-        p.rotation += p.rotSpeed;
-
-        if (frame > fadeStart) {
-          p.opacity = Math.max(0, 1 - (frame - fadeStart) / (maxFrames - fadeStart));
-        }
-
-        ctx.save();
-        ctx.translate(p.x, p.y);
-        ctx.rotate((p.rotation * Math.PI) / 180);
-        ctx.globalAlpha = p.opacity;
-        ctx.fillStyle = p.color;
-
-        if (p.shape === 'rect') {
-          ctx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
-        } else {
-          ctx.beginPath();
-          ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
-          ctx.fill();
-        }
-        ctx.restore();
-      });
-
-      if (frame < maxFrames) {
-        requestAnimationFrame(animate);
-      } else {
-        ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-      }
-    }
-
-    animate();
-  }
-
-  // ==========================================
-  // ENTER LANDING PAGE
-  // ==========================================
-
-  enterBtn.addEventListener('click', () => {
-    greetingScreen.classList.add('hidden');
-    greetingScreen.classList.remove('visible');
+  function showMainContent() {
     mainContent.classList.add('visible');
     document.body.style.overflow = 'auto';
 
+    // Initialize page components
     initScrollReveal();
     initParticles();
     initRobloxCarousel();
     initNameSpinner();
-  });
+  }
+
 
   // ==========================================
   // DYNAMIC NAME SPINNER
@@ -338,6 +198,8 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
+    const particleColor = getComputedStyle(document.documentElement).getPropertyValue('--particle-color').trim() || '135, 206, 235';
+
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       dots.forEach(d => {
@@ -350,7 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         ctx.beginPath();
         ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(135, 206, 235, ${d.o})`;
+        ctx.fillStyle = `rgba(${particleColor}, ${d.o})`;
         ctx.fill();
       });
       requestAnimationFrame(draw);
@@ -431,5 +293,318 @@ document.addEventListener('DOMContentLoaded', () => {
     lightbox.classList.remove('visible');
     document.body.style.overflow = 'auto';
   }
+
+  // ==========================================
+  // MEME VIDEOS
+  // ==========================================
+  const memeScreen = document.getElementById('meme-videos-screen');
+  const memeVideo = document.getElementById('meme-video-player');
+  const prevVideoBtn = document.getElementById('prev-video-btn');
+  const nextVideoBtn = document.getElementById('next-video-btn');
+  const memeVideoCounter = document.getElementById('meme-video-counter');
+  const memeDoneBtn = document.getElementById('meme-done-btn');
+
+  const memeVideos = [
+    'assets/videoMemes/1.mp4',
+    'assets/videoMemes/2.mp4',
+    'assets/videoMemes/3.mp4',
+    'assets/videoMemes/4.mp4',
+    'assets/videoMemes/5.mp4'
+  ];
+  let currentVideoIndex = 0;
+
+  function initMemeVideos() {
+    memeScreen.classList.remove('hidden');
+    currentVideoIndex = 0;
+    loadVideo(0);
+  }
+
+  function loadVideo(index) {
+    if (index < 0 || index >= memeVideos.length) return;
+    memeVideo.src = memeVideos[index];
+    memeVideo.play();
+    memeVideoCounter.textContent = `${index + 1} / ${memeVideos.length}`;
+    
+    prevVideoBtn.disabled = index === 0;
+    
+    if (index === memeVideos.length - 1) {
+      nextVideoBtn.style.display = 'none';
+      memeDoneBtn.classList.remove('hidden');
+    } else {
+      nextVideoBtn.style.display = 'inline-block';
+      memeDoneBtn.classList.add('hidden');
+    }
+  }
+
+  memeVideo.addEventListener('ended', () => {
+    if (currentVideoIndex < memeVideos.length - 1) {
+      currentVideoIndex++;
+      loadVideo(currentVideoIndex);
+    }
+  });
+
+  prevVideoBtn.addEventListener('click', () => {
+    if (currentVideoIndex > 0) {
+      currentVideoIndex--;
+      loadVideo(currentVideoIndex);
+    }
+  });
+
+  nextVideoBtn.addEventListener('click', () => {
+    if (currentVideoIndex < memeVideos.length - 1) {
+      currentVideoIndex++;
+      loadVideo(currentVideoIndex);
+    }
+  });
+
+  memeDoneBtn.addEventListener('click', () => {
+    memeVideo.pause();
+    memeScreen.classList.add('hidden');
+    initFeedbackScreen();
+  });
+
+  // ==========================================
+  // FEEDBACK SCREEN
+  // ==========================================
+  const feedbackScreen = document.getElementById('feedback-screen');
+  const feedbackYesBtn = document.getElementById('feedback-yes-btn');
+  const feedbackKindaBtn = document.getElementById('feedback-kinda-btn');
+  const feedbackNoBtn = document.getElementById('feedback-no-btn');
+  const feedbackResponseText = document.getElementById('feedback-response-text');
+  const feedbackDoneBtn = document.getElementById('feedback-done-btn');
+
+  function initFeedbackScreen() {
+    feedbackScreen.classList.remove('hidden');
+    feedbackResponseText.classList.add('hidden');
+    feedbackDoneBtn.classList.add('hidden');
+    feedbackYesBtn.style.display = 'inline-block';
+    feedbackKindaBtn.style.display = 'inline-block';
+    feedbackNoBtn.style.display = 'inline-block';
+  }
+
+  function handleFeedback(response) {
+    feedbackYesBtn.style.display = 'none';
+    feedbackKindaBtn.style.display = 'none';
+    feedbackNoBtn.style.display = 'none';
+    feedbackResponseText.classList.remove('hidden');
+    feedbackDoneBtn.classList.remove('hidden');
+    
+    if (response === 'yes') {
+      feedbackResponseText.textContent = "Buti naman hehe";
+      feedbackResponseText.style.color = "#48c78e"; // green-ish
+    } else if (response === 'kinda') {
+      feedbackResponseText.textContent = "Hala Bakit? Ghe proceed ka na sa next page";
+      feedbackResponseText.style.color = "var(--color-primary)";
+    } else {
+      feedbackResponseText.textContent = "Ngek aray mo. Ghe next page ka na:(";
+      feedbackResponseText.style.color = "rgba(255,107,138,0.8)"; // red-ish
+    }
+  }
+
+  feedbackYesBtn.addEventListener('click', () => handleFeedback('yes'));
+  feedbackKindaBtn.addEventListener('click', () => handleFeedback('kinda'));
+  feedbackNoBtn.addEventListener('click', () => handleFeedback('no'));
+
+  feedbackDoneBtn.addEventListener('click', () => {
+    feedbackScreen.classList.add('hidden');
+    initRacerTest();
+  });
+
+  // ==========================================
+  // RACER TEST
+  // ==========================================
+  const racerScreen = document.getElementById('racer-test-screen');
+  const racerImg = document.getElementById('racer-image');
+  const racerInput = document.getElementById('racer-answer-input');
+  const racerSubmit = document.getElementById('racer-submit-btn');
+  const racerNextImageBtn = document.getElementById('racer-next-image-btn');
+  const racerFeedback = document.getElementById('racer-feedback');
+  const racerCounter = document.getElementById('racer-counter');
+  const racerResultsArea = document.getElementById('racer-results-area');
+  const racerQuizArea = document.getElementById('racer-quiz-area');
+  const racerScoreText = document.getElementById('racer-score-text');
+  const racerStatusText = document.getElementById('racer-racer-status');
+  const racerDoneBtn = document.getElementById('racer-done-btn');
+
+  const racerImages = [
+    { src: 'assets/quizMemes/BIGGER.jpg', answer: 'BIGGER' },
+    { src: 'assets/quizMemes/BURGER.jpg', answer: 'BURGER' },
+    { src: 'assets/quizMemes/DAGGER.jpg', answer: 'DAGGER' },
+    { src: 'assets/quizMemes/DIGGER.jpg', answer: 'DIGGER' },
+    { src: 'assets/quizMemes/NUMBERS.jpg', answer: 'NUMBERS' },
+    { src: 'assets/quizMemes/RIGGERS.jpg', answer: 'RIGGERS' },
+    { src: 'assets/quizMemes/SINGER.jpg', answer: 'SINGER' }
+  ];
+  let currentRacerIndex = 0;
+  let racerScore = 0;
+
+  function initRacerTest() {
+    racerScreen.classList.remove('hidden');
+    currentRacerIndex = 0;
+    racerScore = 0;
+    racerQuizArea.classList.remove('hidden');
+    racerResultsArea.classList.add('hidden');
+    loadRacerImage(0);
+  }
+
+  function loadRacerImage(index) {
+    if (index >= racerImages.length) {
+      showRacerResults();
+      return;
+    }
+    racerImg.src = racerImages[index].src;
+    racerInput.value = '';
+    racerInput.disabled = false;
+    racerSubmit.classList.remove('hidden');
+    racerNextImageBtn.classList.add('hidden');
+    racerFeedback.innerHTML = '';
+    racerFeedback.className = 'feedback-msg';
+    racerCounter.textContent = `${index + 1} / ${racerImages.length}`;
+    racerInput.focus();
+  }
+
+  function checkRacerAnswer() {
+    if(racerInput.value.trim() === '') return;
+    const rawGuess = racerInput.value;
+    const guess = rawGuess.replace(/\s+/g, '').toUpperCase();
+    const correct = racerImages[currentRacerIndex].answer;
+    
+    racerInput.disabled = true;
+    racerSubmit.classList.add('hidden');
+    racerNextImageBtn.classList.remove('hidden');
+
+    if (guess === correct) {
+      racerScore++;
+      racerFeedback.innerHTML = `Correct! <b>${correct}</b> is the word.`;
+      racerFeedback.className = 'feedback-msg feedback-correct';
+    } else {
+      racerFeedback.innerHTML = `Wrong! Your answer: <b>${rawGuess}</b><br>Correct answer: <b>${correct}</b>`;
+      racerFeedback.className = 'feedback-msg feedback-wrong';
+    }
+  }
+
+  racerSubmit.addEventListener('click', checkRacerAnswer);
+  racerInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !racerInput.disabled) checkRacerAnswer();
+  });
+
+  racerNextImageBtn.addEventListener('click', () => {
+    currentRacerIndex++;
+    loadRacerImage(currentRacerIndex);
+  });
+
+  function showRacerResults() {
+    racerQuizArea.classList.add('hidden');
+    racerResultsArea.classList.remove('hidden');
+    racerScoreText.textContent = `You got ${racerScore} out of ${racerImages.length}`;
+    
+    if (racerScore <= 3) {
+      racerStatusText.textContent = "lala bagsak ka yah. Certified racer ka siguro";
+    } else if (racerScore <= 5) {
+      racerStatusText.textContent = "pwede na. Medyo racer ka boss";
+    } else {
+      racerStatusText.textContent = "congrats di ka racer yay!";
+    }
+  }
+
+  racerDoneBtn.addEventListener('click', () => {
+    racerScreen.classList.add('hidden');
+    initJokeScreen();
+  });
+
+  // ==========================================
+  // JOKE SCREEN
+  // ==========================================
+  const jokeScreen = document.getElementById('joke-screen');
+  const jokeText = document.getElementById('joke-text');
+  const jokeInput = document.getElementById('joke-guess-input');
+  const jokeGuessBtn = document.getElementById('joke-guess-btn');
+  const jokeSiretBtn = document.getElementById('joke-siret-btn');
+  const jokeFeedback = document.getElementById('joke-feedback');
+  const jokeAnswerArea = document.getElementById('joke-answer-area');
+  const jokeAnswerText = document.getElementById('joke-answer-text');
+  const jokeNextBtn = document.getElementById('joke-next-btn');
+  const jokeCounter = document.getElementById('joke-counter');
+  const jokeResultsArea = document.getElementById('joke-results-area');
+  const jokeInputGroup = document.getElementById('joke-input-group');
+  const jokeDoneBtn = document.getElementById('joke-done-btn');
+
+  const jokes = [
+    { q: "Bakit laging natatanggap ang mga Bisaya sa call center?", a: "kasi nga BEST SA CALL (bisakol)", keywords: ["best", "bisakol", "call"] },
+    { q: "Bakit galit na galit yung twin towers?", a: "kasi nag order sila ng pepperoni pizza pero ang nakuha lang nila ay plain (plane)", keywords: ["plain", "plane"] },
+    { q: "Alam mo ba kung bakit madalas hiwalayan mga ofw sa Saudi?", a: "kasi nanlalamig na sila", keywords: ["nanlalamig", "lamig"] },
+    { q: "Ano ang sabi ng elepante sa hubad na lalake?", a: "pano ka humihinga dyan?", keywords: ["hinga", "humihinga"] },
+    { q: "What do you call a bird that doesn't fly?", a: "Dead Bird", keywords: ["dead", "patay"] }
+  ];
+  
+  let currentJokeIndex = 0;
+
+  function initJokeScreen() {
+    jokeScreen.classList.remove('hidden');
+    currentJokeIndex = 0;
+    jokeResultsArea.classList.add('hidden');
+    document.querySelector('.joke-area').classList.remove('hidden');
+    loadJoke(0);
+  }
+
+  function loadJoke(index) {
+    if (index >= jokes.length) {
+      document.querySelector('.joke-area').classList.add('hidden');
+      jokeResultsArea.classList.remove('hidden');
+      return;
+    }
+    jokeText.textContent = `${index + 1}. ${jokes[index].q}`;
+    jokeInput.value = '';
+    jokeFeedback.textContent = '';
+    jokeFeedback.className = 'feedback-msg';
+    jokeAnswerText.textContent = ''; // Fix: clear the previous answer
+    jokeAnswerArea.classList.add('hidden');
+    jokeInputGroup.classList.remove('hidden');
+    jokeCounter.textContent = `${index + 1} / ${jokes.length}`;
+    jokeInput.focus();
+  }
+
+  function checkJokeGuess() {
+    const guess = jokeInput.value.toLowerCase().trim();
+    if (!guess) return;
+    
+    const keywords = jokes[currentJokeIndex].keywords;
+    const isCorrect = keywords.some(kw => guess.includes(kw));
+
+    if (isCorrect) {
+      jokeFeedback.textContent = "Correct! HAHAHA";
+      jokeFeedback.className = 'feedback-msg feedback-correct';
+      revealJokeAnswer();
+    } else {
+      jokeFeedback.textContent = "Wrong! Try again or click Siret na.";
+      jokeFeedback.className = 'feedback-msg feedback-wrong';
+    }
+  }
+
+  jokeGuessBtn.addEventListener('click', checkJokeGuess);
+  jokeInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') checkJokeGuess();
+  });
+
+  jokeSiretBtn.addEventListener('click', revealJokeAnswer);
+
+  function revealJokeAnswer() {
+    jokeInputGroup.classList.add('hidden');
+    jokeAnswerArea.classList.remove('hidden');
+    jokeAnswerText.textContent = `Answer: ${jokes[currentJokeIndex].a}`;
+    if (!jokeFeedback.textContent.includes('Correct')) {
+       jokeFeedback.textContent = '';
+    }
+  }
+
+  jokeNextBtn.addEventListener('click', () => {
+    currentJokeIndex++;
+    loadJoke(currentJokeIndex);
+  });
+
+  jokeDoneBtn.addEventListener('click', () => {
+    jokeScreen.classList.add('hidden');
+    showMainContent();
+  });
 
 });

@@ -14,67 +14,208 @@
 <body>
 
   <!-- ==========================================
-       SECTION 1 — CANDLE BLOW SCREEN
+       THEME SELECTOR SCREEN
        ========================================== -->
-  <div id="candle-screen">
-    <div class="cake-container">
+  <div id="theme-screen">
+    <div class="theme-screen-bg"></div>
+    <div class="theme-selector-container">
 
-      <!-- Candle & Flame -->
-      <div class="candle-wrapper">
-        <div class="flame-container">
-          <div class="flame"></div>
-          <div class="flame-glow"></div>
-          <div class="smoke-container">
-            <div class="smoke"></div>
-            <div class="smoke"></div>
-            <div class="smoke"></div>
+      <div class="theme-selector-header">
+        <div class="theme-selector-emoji">🎨</div>
+        <h2 class="theme-selector-title">Pili ka gusto mong Theme boss</h2>
+        <p class="theme-selector-subtitle">Pick a color theme for Coleen's birthday page ✨</p>
+      </div>
+
+      <div class="theme-cards" id="theme-cards">
+
+        <!-- Sky Blue (default) -->
+        <button class="theme-card active" id="theme-skyblue" data-theme="skyblue" aria-label="Sky Blue theme">
+          <div class="theme-card-preview">
+            <div class="tp-bg" style="background: #4BB8FA"></div>
+            <div class="tp-swatch" style="background: linear-gradient(135deg,#4BB8FA,#1F8BD6)"></div>
+            <div class="tp-swatch" style="background: linear-gradient(135deg,#1F8BD6,#1670B0)"></div>
+            <div class="tp-line" style="background:#8AD4FC"></div>
+            <div class="tp-line" style="background:rgba(255,255,255,0.5)"></div>
+          </div>
+          <div class="theme-card-info">
+            <span class="theme-card-name">Sky Blue</span>
+            <span class="theme-card-badge">Default ⭐</span>
+          </div>
+        </button>
+
+        <!-- Ocean Deep -->
+        <button class="theme-card" id="theme-ocean" data-theme="ocean" aria-label="Ocean Deep theme">
+          <div class="theme-card-preview">
+            <div class="tp-bg" style="background: #010A10"></div>
+            <div class="tp-swatch" style="background: linear-gradient(135deg,#00B4D8,#007B94)"></div>
+            <div class="tp-swatch" style="background: linear-gradient(135deg,#007B94,#005F73)"></div>
+            <div class="tp-line" style="background:#48D1E8"></div>
+            <div class="tp-line" style="background:rgba(144,224,239,0.5)"></div>
+          </div>
+          <div class="theme-card-info">
+            <span class="theme-card-name">Ocean Deep</span>
+            <span class="theme-card-desc">Dark &amp; teal</span>
+          </div>
+        </button>
+
+        <!-- Arctic Frost -->
+        <button class="theme-card" id="theme-arctic" data-theme="arctic" aria-label="Arctic Frost theme">
+          <div class="theme-card-preview">
+            <div class="tp-bg" style="background: #121E28"></div>
+            <div class="tp-swatch" style="background: linear-gradient(135deg,#88CCD8,#5AABB8)"></div>
+            <div class="tp-swatch" style="background: linear-gradient(135deg,#6DBEC8,#4A98A8)"></div>
+            <div class="tp-line" style="background:#E0F4F8"></div>
+            <div class="tp-line" style="background:rgba(224,244,248,0.5)"></div>
+          </div>
+          <div class="theme-card-info">
+            <span class="theme-card-name">Arctic Frost</span>
+            <span class="theme-card-desc">Icy &amp; muted</span>
+          </div>
+        </button>
+
+        <!-- Midnight Navy -->
+        <button class="theme-card" id="theme-navy" data-theme="navy" aria-label="Midnight Navy theme">
+          <div class="theme-card-preview">
+            <div class="tp-bg" style="background: #020817"></div>
+            <div class="tp-swatch" style="background: linear-gradient(135deg,#3B82F6,#1D4ED8)"></div>
+            <div class="tp-swatch" style="background: linear-gradient(135deg,#2563EB,#1E3A8A)"></div>
+            <div class="tp-line" style="background:#93C5FD"></div>
+            <div class="tp-line" style="background:rgba(147,197,253,0.5)"></div>
+          </div>
+          <div class="theme-card-info">
+            <span class="theme-card-name">Midnight Navy</span>
+            <span class="theme-card-desc">Bold &amp; royal</span>
+          </div>
+        </button>
+
+        <!-- Cerulean Dusk -->
+        <button class="theme-card" id="theme-cerulean" data-theme="cerulean" aria-label="Cerulean Dusk theme">
+          <div class="theme-card-preview">
+            <div class="tp-bg" style="background: #0F0720"></div>
+            <div class="tp-swatch" style="background: linear-gradient(135deg,#A78BFA,#7C3AED)"></div>
+            <div class="tp-swatch" style="background: linear-gradient(135deg,#8B5CF6,#6D28D9)"></div>
+            <div class="tp-line" style="background:#C4B5FD"></div>
+            <div class="tp-line" style="background:rgba(196,181,253,0.5)"></div>
+          </div>
+          <div class="theme-card-info">
+            <span class="theme-card-name">Cerulean Dusk</span>
+            <span class="theme-card-desc">Twilight violet</span>
+          </div>
+        </button>
+
+      </div>
+
+      <button class="theme-confirm-btn" id="theme-confirm-btn">Next ✨</button>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       MEME VIDEOS SCREEN
+       ========================================== -->
+  <div id="meme-videos-screen" class="screen hidden">
+    <div class="screen-bg"></div>
+    <div class="screen-container">
+      <div class="screen-header">
+        <h2 class="screen-title">NOOD KA MUNA</h2>
+      </div>
+      <div class="video-player-wrapper">
+        <video id="meme-video-player" playsinline controls></video>
+      </div>
+      <div class="video-controls">
+        <button id="prev-video-btn" class="secondary-btn" disabled>Previous</button>
+        <span id="meme-video-counter" class="counter-text">1 / 5</span>
+        <button id="next-video-btn" class="secondary-btn">Next Video</button>
+      </div>
+      <button id="meme-done-btn" class="primary-btn hidden" style="margin-top: 20px;">Proceed to Next Page ✨</button>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       FEEDBACK SCREEN
+       ========================================== -->
+  <div id="feedback-screen" class="screen hidden">
+    <div class="screen-bg"></div>
+    <div class="screen-container">
+      <div class="screen-header">
+        <h2 class="screen-title">Natawa ka ba?</h2>
+        <p class="screen-subtitle">Seryoso to ah</p>
+      </div>
+      <div style="display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;">
+        <button id="feedback-yes-btn" class="primary-btn">Oo</button>
+        <button id="feedback-kinda-btn" class="secondary-btn">Medyo</button>
+        <button id="feedback-no-btn" class="secondary-btn" style="border-color: rgba(255,107,138,0.4); color: rgba(255,107,138,0.8);">Hindi</button>
+      </div>
+      <p id="feedback-response-text" class="joke-answer hidden" style="margin-bottom: 20px;"></p>
+      <button id="feedback-done-btn" class="primary-btn hidden">Proceed to Next Page ✨</button>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       RACER TEST SCREEN
+       ========================================== -->
+  <div id="racer-test-screen" class="screen hidden">
+    <div class="screen-bg"></div>
+    <div class="screen-container">
+      <div class="screen-header">
+        <h2 class="screen-title">Racer Test</h2>
+        <p class="screen-subtitle">Fill in the blanks to yah. Galingan mo.</p>
+      </div>
+      <div id="racer-quiz-area">
+        <div class="racer-image-wrapper">
+          <img id="racer-image" src="" alt="Racer Test Image">
+        </div>
+        <div class="racer-input-group">
+          <input type="text" id="racer-answer-input" placeholder="Type the complete word..." autocomplete="off">
+          <button id="racer-submit-btn" class="primary-btn">Submit</button>
+        </div>
+        <button id="racer-next-image-btn" class="secondary-btn hidden" style="margin-top: 10px;">Next Image</button>
+        <p id="racer-feedback" class="feedback-msg"></p>
+        <p id="racer-counter" class="counter-text" style="margin-top:10px;">1 / 7</p>
+      </div>
+      <div id="racer-results-area" class="hidden">
+        <h3 class="results-title">Test Complete!</h3>
+        <p class="results-score" id="racer-score-text"></p>
+        <p class="results-desc" id="racer-racer-status"></p>
+        <button id="racer-done-btn" class="primary-btn" style="margin-top: 20px;">Proceed to Next Page ✨</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       JOKE SCREEN
+       ========================================== -->
+  <div id="joke-screen" class="screen hidden">
+    <div class="screen-bg"></div>
+    <div class="screen-container">
+      <div class="screen-header">
+        <h2 class="screen-title">Joke time naman tayo hehe</h2>
+        <!-- <p class="screen-subtitle">Let's see if you can guess the answer!</p> -->
+      </div>
+      <div class="joke-area">
+        <p id="joke-text" class="joke-text"></p>
+        <div class="joke-input-group" id="joke-input-group">
+          <input type="text" id="joke-guess-input" placeholder="Your guess..." autocomplete="off">
+          <div class="joke-btn-group">
+            <button id="joke-guess-btn" class="primary-btn">Submit guess</button>
+            <button id="joke-siret-btn" class="secondary-btn">Siret na</button>
           </div>
         </div>
-        <div class="candle"></div>
-      </div>
-
-      <!-- Cake Layers (top → bottom) -->
-      <div class="cake-layer top">
-        <div class="cake-dots">
-          <span></span><span></span><span></span>
+        <p id="joke-feedback" class="feedback-msg"></p>
+        <div id="joke-answer-area" class="hidden">
+          <p class="joke-answer" id="joke-answer-text"></p>
+          <button id="joke-next-btn" class="primary-btn" style="margin-top: 20px;">Next Joke</button>
         </div>
+        <p id="joke-counter" class="counter-text" style="margin-top:15px;">1 / 5</p>
       </div>
-      <div class="cake-layer middle">
-        <div class="cake-dots">
-          <span></span><span></span><span></span><span></span>
-        </div>
+      <div id="joke-results-area" class="hidden">
+        <h3 class="results-title">Jokes Done!</h3>
+        <button id="joke-done-btn" class="primary-btn" style="margin-top: 20px;">Go to Main Page ✨</button>
       </div>
-      <div class="cake-layer bottom">
-        <div class="cake-dots">
-          <span></span><span></span><span></span><span></span><span></span>
-        </div>
-      </div>
-      <div class="cake-plate"></div>
-    </div>
-
-    <!-- Prompt -->
-    <div class="blow-prompt">
-      <h2>Make a wish and blow the candle 🎂</h2>
-      <p>Blow into your microphone or tap the button below</p>
-      <button id="blow-btn">Blow 🌬️</button>
     </div>
   </div>
 
   <!-- ==========================================
-       SECTION 2 — GREETING SCREEN
-       ========================================== -->
-  <div id="greeting-screen">
-    <canvas id="confetti-canvas"></canvas>
-    <div class="greeting-content">
-      <div class="greeting-emoji">🎉</div>
-      <h2 class="greeting-text">Happy 21st Birthday<br>to you, Coleen!</h2>
-      <p class="greeting-subtext">Wishing you all the best on your special day ✨</p>
-      <button id="enter-btn">Enter ✨</button>
-    </div>
-  </div>
-
-  <!-- ==========================================
-       MAIN CONTENT  (hidden until "Enter" is clicked)
+       MAIN CONTENT
        ========================================== -->
   <div id="main-content">
 
@@ -88,10 +229,7 @@
         <div class="hero-text reveal">
           <div class="label">🎉 May 29, 2026</div>
           <h1>Happy 21st Birthday, <span id="dynamic-name">Coleen</span>!</h1>
-          <p>
-            Here's to celebrating another year of you — your smile, your energy,
-            and everything that makes you uniquely amazing. This one's for you. 🥂
-          </p>
+          <p>Wish you all the best po 💖</p>
         </div>
       </div>
       <div class="scroll-indicator">
@@ -104,24 +242,20 @@
     <section id="gallery-section">
       <div class="section-header reveal">
         <h2>Moments with Coleen 📷</h2>
-        <p>A collection of memories worth celebrating</p>
+        <p>Konti lang to kasi ito lang mga nasend mo HEHE</p>
       </div>
       <div class="gallery-grid">
         <div class="gallery-item reveal">
           <img src="assets/IMG_2911150799216846.png" alt="Memory 1" loading="lazy">
-          <div class="overlay"><span>Memory #1</span></div>
         </div>
         <div class="gallery-item reveal">
           <img src="assets/IMG_20260508_140351.png" alt="Memory 2" loading="lazy">
-          <div class="overlay"><span>Memory #2</span></div>
         </div>
         <div class="gallery-item reveal">
           <img src="assets/IMG_20260515_212120.png" alt="Memory 3" loading="lazy">
-          <div class="overlay"><span>Memory #3</span></div>
         </div>
         <div class="gallery-item reveal">
           <img src="assets/IMG_20260516_214443.png" alt="Memory 4" loading="lazy">
-          <div class="overlay"><span>Memory #4</span></div>
         </div>
       </div>
     </section>
@@ -129,8 +263,8 @@
     <!-- ---- Roblox Moments Section ---- -->
     <section id="roblox-section">
       <div class="section-header reveal">
-        <h2>🎮 Roblox Moments</h2>
-        <p>Gaming memories we'll never forget</p>
+        <h2>Roblox Moments with us 🎮</h2>
+        <p>Karamihan ng mga pic dito is mga pic natin HAHAHAHHAHHAA. Wala kasi tayo masyadong pics ng mga Roblox Gang</p>
       </div>
 
       <div class="roblox-carousel-wrapper">
